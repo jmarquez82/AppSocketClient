@@ -27,17 +27,23 @@ namespace AppSocketClient
 
     public partial class Result
     {
+        [JsonProperty("lat")]
+        public string Lat { get; set; }
+
         [JsonProperty("created")]
         public string Created { get; set; }
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
 
         [JsonProperty("attributes")]
         public Attribute[] Attributes { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("long")]
+        public string Long { get; set; }
 
         [JsonProperty("organization")]
         public string Organization { get; set; }
@@ -66,14 +72,17 @@ namespace AppSocketClient
         [JsonProperty("file")]
         public string File { get; set; }
 
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
         [JsonProperty("description")]
         public string Description { get; set; }
 
         [JsonProperty("id")]
         public long Id { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("value")]
+        public string Value { get; set; }
     }
 
     public partial class GettingStarted

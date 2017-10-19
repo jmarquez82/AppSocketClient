@@ -1,72 +1,62 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using SimpleTCP;
+
+/**
+ * autor: Jm
+ * 
+ */
 
 namespace AppSocketClient
 {
     class MainClass
     {
         static HttpClient client = new HttpClient();
-        static TcpClient clientSocket = new TcpClient();
-        static SimpleTcpClient cliente;
 
-
+        /*Method main*/
         public static void Main(string[] args)
         {
-            //RunAsync().Wait();
+
+            //Test TCP Socket
             Console.WriteLine("OK");
-           // clientSocket.Connect();
-            //_clientSocket();
-            _simpleTcp();
+            while(true){
+                String valor = Console.ReadLine();
+                _clientSocket(valor);
+            }
+
+            //Test Json to C#
+            // Activar para ver Json to Object
+            //RunAsync().Wait();
+           
         }
-
-        public static void _simpleTcp(){
-            String message = "{ \"type\": \"video\", \"value\": \"1.mp4\"}";
-            cliente = new SimpleTcpClient();
-            cliente.Connect("192.168.1.42", 8080);
-            cliente.StringEncoder = Encoding.UTF8;
-            cliente.DataReceived += client_DataReceived;
-            cliente.WriteLineAndGetReply(message, TimeSpan.FromSeconds(3));
-            cliente.Disconnect();
-
-        }
-
-        private static void client_DataReceived(object sender, SimpleTCP.Message e){
-
-            Console.WriteLine("Respuesta: " + e.MessageString);
-        }
-
 
         /**
          * Socket client
          */
-        public static void _clientSocket(){
+        public static void _clientSocket(String valor){
 
             try
             {
+                //Json Format
+                //Examples:
+                //
+                //Video
+                //String message = "{ \"type\": \"video\", \"value\": \"1.mp4\"}";
+                //Imagen
+                //String message = "{ \"type\": \"image\", \"value\": \"http://urlimagen.jpg\"}";
+                //Map
+                //String message = "{ \"type\": \"map\", \"value\": \"-76.3,-31.5\"}";
+                //
+                //*Los archivos de videos, se encontrarán almacenados de forma local.
 
-                String message = "Holi";//"{ \"type\": \"video\", \"value\": \"1.mp4\"}";
-                                        // Create a TcpClient.
-                                        // Note, for this client to work you need to have a TcpServer 
-                                        // connected to the same address as specified by the server, port
-                                        // combination.
+                String message = "{ \"type\": \"video\", \"value\": \""+ valor + ".mp4\"}";
+
                 Int32 port = 8080;
-                TcpClient client = new TcpClient("192.168.1.42", port);
-
-                // Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = Encoding.ASCII.GetBytes(message);
-
-                // Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
-
+                TcpClient client = new TcpClient("192.168.1.77", port);
+                Byte[] data = Encoding.UTF8.GetBytes(message);
                 NetworkStream stream = client.GetStream();
-
-                // Send the message to the connected TcpServer. 
                 stream.Write(data, 0, data.Length);
 
                 Console.WriteLine("Sent: {0}", message);
@@ -74,30 +64,30 @@ namespace AppSocketClient
                 // Receive the TcpServer.response.
 
                 // Buffer to store the response bytes.
-                data = new Byte[256];
+                //data = new Byte[256];
 
                 // String to store the response ASCII representation.
-                String responseData = String.Empty;
+                //String responseData = String.Empty;
 
                 // Read the first batch of the TcpServer response bytes.
-                Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Console.WriteLine("Received: {0}", responseData);
+                //Int32 bytes = stream.Read(data, 0, data.Length);
+                //responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                //Console.WriteLine("Received: {0}", responseData);
 
                 // Close everything.
                 stream.Close();
                 client.Close();
+
             }
             catch(Exception ex){
                 Console.WriteLine("PROBLEMAS!" + ex.ToString() );
             }
-
-           
-
         }
 
 
+
         /**
+         * JSON TO OBJECT
          * Hilo de conexión
          */
         static async Task<GettingStarted> GetObjectAsync(string path)
